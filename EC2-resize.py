@@ -10,8 +10,8 @@ def wait_until_instance_stopped(ec2_client, instance_id):
         print(f"Error waiting for instance to stop: {e}")
 
 def lambda_handler(event, context):
-    # Retrieve the instance ID from the event parameter
-    instance_id = event['instanceId']
+    # Type your instance-ID
+    instance_id = 'i-*******'
     
     # Create an EC2 client
     ec2_client = boto3.client('ec2')
@@ -24,7 +24,7 @@ def lambda_handler(event, context):
         wait_until_instance_stopped(ec2_client, instance_id)
         
         # Modify the instance type
-        ec2_client.modify_instance_attribute(InstanceId=instance_id, InstanceType={'Value': 't2.medium'})
+        ec2_client.modify_instance_attribute(InstanceId=instance_id, InstanceType={'Value': 't2.micro'})
         
         # Start the instance
         ec2_client.start_instances(InstanceIds=[instance_id])
@@ -34,6 +34,3 @@ def lambda_handler(event, context):
     except Exception as e:
         # Handle any exceptions that occur during the resizing process
         return f'Error resizing instance: {e}'
-    
-
-# Test event JSON: {"instanceId": "<instance-ID>"}
